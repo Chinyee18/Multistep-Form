@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="webApplication">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  
+  <title>Frontend Mentor | Multi-step form</title>
+
+  <!-- css -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- jquery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+  <!-- The Angular -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-mask/1.6.3/mask.js"></script>
+
+  <script src="assets/js/application.js"></script>
+</head>
+<body ng-cloak ng-controller="Controller">
+  <div class="mobile-only relative" >
+    <div class="d-flex absolute steps-container">
+      <div ng-repeat='step in steps' class="step" ng-click="setActive(step, customForm)">
+        <div class="step-number text-medium" ng-class="{active : activeStep == step}">{{step.id}}</div>
+      </div>
+    </div>
+    <div class="sidebar-img">
+      <img src="assets/images/bg-sidebar-mobile.svg" />
+    </div>
+  </div>
+  <div class="container">
+    <form name="customForm">
+      <div class="d-lg-flex">
+        <div class="relative sidebar desktop-only">
+          <div class="absolute steps-container">
+            <div ng-repeat='step in steps' class="step" ng-click="setActive(step, customForm)">
+                <div class="step-number text-medium" ng-class="{active : activeStep == step}">{{step.id}}</div>
+                <div><span class="step-text text-regular">{{step.item1}}</span><br><span class="text-medium">{{step.item2}}</span></div>
+            </div>
+          </div>
+          <div class="sidebar-img">
+            <img src="assets/images/bg-sidebar-desktop.svg"/>
+          </div>
+        </div>
+        <div class="content">
+            <div ng-show="activeStep == steps[0]">
+              <h1>Personal info</h1>
+              <p class="sub">Please provide your name, email address, and phone number.</p>
+              <div class="d-flex">
+                <div class="input-label text-dBlue">Name</div>
+                <div class="error-msg input-label" ng-if="otherStep && customForm.name.$error.required || clickNext && customForm.name.$error.required">This feild is required</div>
+              </div>
+              <input class="text-input" ng-model="data.name" name="name" type="text" placeholder="e.g. Stephen King" required>
+
+              <div class="d-flex">
+                <div class="input-label text-dBlue">Email Address</div>
+                <div class="input-label error-msg" ng-if="otherStep && customForm.email.$invalid || clickNext && customForm.email.$invalid">Please insert valid email</div>
+              </div>
+              <input required class="text-input" ng-model="data.email" name="email" type="email" placeholder="e.g. stephenking@lorem.com" >
+
+              <div class="d-flex">
+                <div class="input-label text-dBlue">Phone Number</div>
+                <div class="input-label error-msg" ng-if="otherStep && customForm.phone.$error.required || clickNext && customForm.phone.$error.required">This feild is required</div>
+              </div>
+              <input required class="text-input" ng-model="data.phone" name="phone" type="text" placeholder="e.g. +1 234 567 890" >
+            </div>
+            <div ng-show="activeStep == steps[1]">
+              <h1>Select your plan</h1>
+              <p class="sub">You have the option of monthly or yearly billing.</p>
+              <div class="d-lg-flex card-container">
+                <div class="card plan-card d-sm-flex selected" id="arcade" ng-click="selectPlan('arcade')">
+                  <img src="assets/images/icon-arcade.svg">
+                  <input type="radio" name="plan" ng-model="data.plan" value="arcade" ng-click="selectPlan('arcade')" >
+                  <div class="text-medium" >
+                    Arcade
+                    <span ng-if="data.planDuration == 'monthly'" class="text-regular text-grey price">$9/mo</span>
+                    <div ng-if="data.planDuration == 'yearly'">
+                      <span class="price text-regular text-grey">$90/yr</span>
+                      <span class="free text-dBlue">2 months free</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card plan-card d-sm-flex" id="advanced" ng-click="selectPlan('advanced')">
+                  <img src="assets/images/icon-advanced.svg">
+                  <input type="radio"  name="plan" ng-model="data.plan" value="advanced" ng-click="selectPlan('advanced')">
+                  <div class="text-medium">
+                    Advanced
+                    <span ng-if="data.planDuration == 'monthly'" class="text-regular text-grey price">$12/mo</span>
+                    <div ng-if="data.planDuration == 'yearly'">
+                      <span class="price text-regular text-grey">$120/yr</span>
+                      <span class="free text-dBlue">2 months free</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card plan-card d-sm-flex" id="pro" ng-click="selectPlan('pro')">
+                  <img src="assets/images/icon-pro.svg">
+                  <input type="radio" name="plan" ng-model="data.plan" value="pro" ng-click="selectPlan('pro')">
+                  <div class="text-medium">
+                    Pro
+                    <span ng-if="data.planDuration == 'monthly'" class="text-regular text-grey price">$15/mo</span>
+                    <div ng-if="data.planDuration == 'yearly'">
+                      <span class="price text-regular text-grey">$150/yr</span>
+                      <span class="free text-dBlue">2 months free</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-medium d-flex light-blue-card month-year">
+                <span ng-class="data.planDuration == 'monthly' ? 'text-dBlue': 'text-grey' ">Monthly</span>
+                <div class="toggle">
+                  <input type="checkbox" id="planDuration" ng-model="data.planDuration" ng-false-value="'monthly'" ng-true-value="'yearly'">
+                  <label for="planDuration"></label>
+                </div>
+                <span ng-class="data.planDuration == 'yearly' ? 'text-dBlue': 'text-grey' ">Yearly</span>
+              </div>
+            </div>
+            <div ng-show="activeStep == steps[2]">
+              <h1>Pick add-ons</h1>
+              <p class="sub">Add-ons help enhance your gaming experience.</p>
+              <div class="card checkbox-card" ng-click="toggleCheck(addOn,'onlineService')" id="onlineService">
+                <input type="checkbox" class="checkbox" ng-model="addOn.onlineService" ng-click="toggleCheck(addOn,'onlineService')">
+                <p class="text-medium">
+                  Online service<span class="text-regular text-grey">Access to multiplayer games</span></p>
+                <div class="price" ng-if="data.planDuration == 'monthly'">+$1/mo</div>
+                <div class="price" ng-if="data.planDuration == 'yearly'">+$10/mo</div>
+              </div>
+              <div class="card checkbox-card" ng-click="toggleCheck(addOn,'largerStorage')" id="largerStorage">
+                <input type="checkbox" class="checkbox" ng-model="addOn.largerStorage" ng-click="toggleCheck(addOn,'largerStorage')">
+                <p class="text-medium">
+                  Larger storage<span class="text-regular text-grey">Extra 1TB of cloud save</span></p>
+                <div class="price" ng-if="data.planDuration == 'monthly'">+$2/mo</div>
+                <div class="price" ng-if="data.planDuration == 'yearly'">+$20/mo</div>
+              </div>
+              <div class="card checkbox-card" ng-click="toggleCheck(addOn,'customProfile')" id="customProfile">
+                <input type="checkbox" class="checkbox" ng-model="addOn.customProfile" ng-click="toggleCheck(addOn,'customProfile')">
+                <p class="text-medium">
+                  Customizable Profile<span class="text-regular text-grey">Custom theme on your profile</span></p>
+                <div class="price" ng-if="data.planDuration == 'monthly'">+$2/mo</div>
+                <div class="price" ng-if="data.planDuration == 'yearly'">+$20/mo</div>
+              </div>
+            </div>
+            <div ng-show="activeStep == steps[3] && !thankYou">
+              <h1>Finishing up</h1>
+              <p class="sub">Double-check everything looks OK before confirming.</p>
+              <div class="light-blue-card" ng-if="data.plan">
+                <div class="summary-container summary-plan-container">
+                  <div class="detail ">
+                    <p class="text-dBlue">{{data.plan}} (<span>{{data.planDuration}}</span>)</p>
+                    <a ng-click="setActive(steps[0], customForm)" style="text-decoration: underline;">Change</a>
+                  </div>
+                  <div class="price text-dBlue" ng-repeat="p in plans | filter: {id: data.plan}">
+                    <span ng-if="data.planDuration == 'monthly'">${{p.monthlyPrice}}/mo</span>
+                    <span ng-if="data.planDuration == 'yearly'">${{p.yearlyPrice}}/yr</span>
+                  </div>
+                </div>
+                <span ng-if="addOnItems"><hr /></span>
+                <div class="summary-container summary-addOn-container" ng-if="addOnItems">
+                  <div class="text-grey">
+                    <span ng-repeat="a in addOns | filter: selectedAddOnItem">{{a.name}}</span>
+                  </div>
+                  <div class="price text-dBlue">
+                    <span ng-repeat="a in addOns | filter: selectedAddOnItem">
+                      <span ng-if="data.planDuration == 'monthly'">+${{a.monthlyPrice}}/mo</span>
+                      <span ng-if="data.planDuration == 'yearly'">+${{a.yearlyPrice}}/yr</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="white-card">
+                <div class="summary-container">
+                  <div class="text-grey">Total (per <span ng-if="data.planDuration == 'monthly'">month</span><span ng-if="data.planDuration == 'yearly'">year</span>)</div>
+                  <div class="price">${{totalSum}}/yr</div>
+                </div>
+              </div>
+            </div>
+            <div ng-if="activeStep == steps[3] && thankYou" class="text-center">
+              <div class="ty-container">
+                <img src="assets/images/icon-thank-you.svg"/>
+                <h1>Thank you!</h1>
+                <p class="text-grey">Thanks for confirming your subscription! We hope you have fun using our platform. If you ever need support, please feel free to email us at support@loremgaming.com.</p>
+              </div>
+            </div>
+            <div></div>
+            <button class="btn back-btn desktop-only" ng-click="back(activeStep)" ng-if="activeStep && activeStep !== steps[0] && !thankYou">Go Back</button>
+            <button class="btn next-btn desktop-only" ng-click="next(activeStep, customForm)" ng-if="activeStep && activeStep !== steps[3] ">Next Step</button>
+            <button class="btn confirm-btn desktop-only" ng-click="confirm()" ng-if="activeStep && activeStep == steps[3] &&!thankYou">Confirm</button>
+        </div>
+        
+      </div>
+    </form>
+    
+    
+  </div>
+  <div class="btn-container mobile-only" ng-if="!thankYou">
+    <button class="btn back-btn" ng-click="back(activeStep)" ng-if="activeStep && activeStep !== steps[0] && !thankYou">Go Back</button>
+    <button class="btn next-btn" ng-click="next(activeStep, customForm)" ng-if="activeStep && activeStep !== steps[3] ">Next Step</button>
+    <button class="btn confirm-btn" ng-click="confirm()" ng-if="activeStep && activeStep == steps[3] &&!thankYou">Confirm</button>
+  </div>
+  <div class="attribution desktop-only">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
+    Coded by <a href="#">Your Name Here</a>.
+  </div>
+</body>
+</html>
