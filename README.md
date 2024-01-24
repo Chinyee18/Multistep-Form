@@ -1,6 +1,8 @@
 # Frontend Mentor - Multi-step form
 
-![Design preview for the Multi-step form coding challenge](./design/desktop-preview.jpg)
+![image](https://github.com/Chinyee18/Multistep-Form/assets/53111687/a161ca9e-e79b-4678-af74-2888ae56c060)
+
+[Preview Site](https://multistep-form-lime.vercel.app/)
 
 ## Welcome! 👋
 
